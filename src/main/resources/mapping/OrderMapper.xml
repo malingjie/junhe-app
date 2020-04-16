@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.junhe.demo.mapper.OrderMapper" >
+    <resultMap id="BaseResultMap" type="com.junhe.demo.model.Order" >
+        <result column="id" property="id" jdbcType="INTEGER" />
+        <result column="order_num" property="orderNum" jdbcType="VARCHAR" />
+        <result column="phone_number" property="phoneNumber" jdbcType="BIGINT" />
+        <result column="goods_code" property="goodsCode" jdbcType="VARCHAR" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="goods_price" property="goodsPrice" jdbcType="DECIMAL" />
+        <result column="buy_num" property="buyNum" jdbcType="BIGINT" />
+        <result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+        <result column="buyer_name" property="buyerName" jdbcType="VARCHAR" />
+        <result column="buyer_number" property="buyerNumber" jdbcType="BIGINT" />
+        <result column="buyer_address" property="buyerAddress" jdbcType="VARCHAR" />
+        <result column="allgoods_price" property="allgoodsPrice" jdbcType="DECIMAL" />
+        <result column="order_time" property="orderTime" jdbcType="VARCHAR" />
+        <result column="order_img" property="orderImg" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insertOrder" parameterType="com.junhe.demo.model.Order" >
+        insert into t_orderinfo (order_num, phone_number, goods_code, goods_name,goods_price,
+        buy_num,order_type, order_status, company,buyer_name,
+        buyer_number, buyer_address, allgoods_price, order_time,del_flag, public_status
+        )
+        values (#{orderNum,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=BIGINT}, #{goodsCode,jdbcType=VARCHAR}, #{goodsName,jdbcType=VARCHAR},
+        #{goodsPrice,jdbcType=DECIMAL}, #{buyNum,jdbcType=BIGINT}, #{orderType,jdbcType=BIGINT}, #{orderStatus,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR},#{buyerName,jdbcType=VARCHAR},
+        #{buyerNumber,jdbcType=BIGINT}, #{buyerAddress,jdbcType=VARCHAR}, #{allgoodsPrice,jdbcType=DECIMAL}, #{orderTime,jdbcType=VARCHAR}, "0", #{publicStatus,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <select id="queryOrderByphoneNumber" resultType="com.junhe.demo.model.Order">
+  SELECT a.id, a.order_num as orderNum, a.phone_number as phoneNumber, a.goods_code as goodsCode, a.goods_name as goodsName,a.goods_price as goodsPrice,a.buy_num as buyNum,a.order_type as orderType, a.order_status as orderStatus, a.buyer_name as buyerName,
+a.buyer_number as buyerNumber, a.buyer_address as buyerAddress, a.allgoods_price as allgoodsPrice, a.order_time as orderTime ,a.public_status as publicStatus,a.del_user, a.remarks ,b.status
+        FROM t_orderinfo a     left join t_billinfo b
+        on a.order_num = b.order_num
+			  where	a.phone_number=#{phoneNumber} and a.order_type="微信支付" and a.del_user is null
+			  ORDER BY a.order_time DESC
+    </select>
+
+    <select id="queryOrderByOrderNum" resultType="com.junhe.demo.model.Order">
+        SELECT id, order_num as orderNum, phone_number as phoneNumber, goods_code as goodsCode, goods_name as goodsName,goods_price as goodsPrice,
+        buy_num as buyNum,order_type as orderType, order_status as orderStatus, buyer_name as buyerName,
+        buyer_number as buyerNumber, buyer_address as buyerAddress, allgoods_price as allgoodsPrice, order_time as orderTime
+        FROM t_orderinfo
+        WHERE
+        order_num=#{orderNum}
+    </select>
+
+    <select id="queryBusinessOrderByphoneNumber" resultType="com.junhe.demo.model.Order">
+        select a.id, a.order_num as orderNum, a.phone_number as phoneNumber, a.goods_code as goodsCode, a.goods_name as goodsName,a.goods_price as goodsPrice,a.buy_num as buyNum,a.order_type as orderType, a.order_status as orderStatus, a.buyer_name as buyerName,
+a.buyer_number as buyerNumber, a.buyer_address as buyerAddress, a.allgoods_price as allgoodsPrice, a.order_time as orderTime ,a.public_status as publicStatus, a.remarks ,b.status
+        FROM t_orderinfo a left join t_billinfo b
+        on a.order_num = b.order_num
+			  where	a.phone_number=#{phoneNumber} and a.order_type="公对公转账"
+              ORDER BY order_time DESC
+    </select>
+
+    <update id="delUserOrder">
+        UPDATE t_orderinfo o
+        SET o.del_user = '1'
+        WHERE o.order_num = #{orderNum}
+    </update>
+
+    <update id="updateOrderStatus" parameterType="com.junhe.demo.model.Order">
+        UPDATE t_orderinfo o
+        SET o.order_status = #{orderStatus}
+        WHERE o.order_num = #{orderNum}
+    </update>
+
+    <update id="updateOrderPic" parameterType="com.junhe.demo.model.Order">
+        UPDATE t_orderinfo o
+        SET o.order_img = #{picName}, o.order_status = #{orderStatus} , o.public_status = #{publicStatus}
+        WHERE o.order_num = #{orderNum}
+    </update>
+
+
+
+</mapper>

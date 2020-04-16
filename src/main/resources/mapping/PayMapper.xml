@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.junhe.demo.mapper.PayMapper" >
+    <resultMap id="BaseResultMap" type="com.junhe.demo.model.Order" >
+        <result column="appid" property="appid" jdbcType="VARCHAR" />
+        <result column="mch_id" property="mchId" jdbcType="VARCHAR" />
+        <result column="partnerKey" property="partnerKey" jdbcType="VARCHAR" />
+    </resultMap>
+
+
+    <select id="queryKey" resultType="com.junhe.demo.model.SecretKey">
+        SELECT appid, mch_id as mchId, partnerKey
+        FROM secret_key
+    </select>
+
+
+</mapper>

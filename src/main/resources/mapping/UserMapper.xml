@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.junhe.demo.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.junhe.demo.model.User" >
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="BIGINT" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="region" property="region" jdbcType="VARCHAR" />
+    <result column="comp_name" property="compName" jdbcType="VARCHAR" />
+    <result column="credit_code" property="creditCode" jdbcType="VARCHAR" />
+    <result column="license" property="license" jdbcType="VARCHAR" />
+    <result column="medical_code" property="medicalCode" jdbcType="VARCHAR" />
+    <result column="medical_card" property="medicalCard" jdbcType="VARCHAR" />
+    <result column="login_status" property="loginStatus" jdbcType="VARCHAR" />
+    <result column="check_status" property="checkStatus" jdbcType="VARCHAR" />
+    <result column="check_name" property="checkName" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.junhe.demo.model.User" >
+    insert into t_userinfo (username, phone_number, password,
+      region, comp_name, credit_code,
+      license, medical_code, medical_card,login_status,check_status,del_flag
+      )
+    values (#{username,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=BIGINT}, #{password,jdbcType=VARCHAR},
+      #{region,jdbcType=VARCHAR}, #{compName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR},
+      #{license,jdbcType=VARCHAR}, #{medicalCode,jdbcType=VARCHAR}, #{medicalCard,jdbcType=VARCHAR},"0","0","0"
+      )
+  </insert>
+
+  <select id="queryUserByphoneNumber" resultType="com.junhe.demo.model.User">
+    SELECT username, phone_number as phoneNumber, password,
+      region, comp_name as compName, credit_code as creditCode,
+      license, medical_code as medicalCode, medical_card as medicalCard,
+      login_status as loginStatus, check_status as checkStatus, check_name as checkName
+    FROM t_userinfo
+    WHERE
+    phone_number=#{phoneNumber}
+  </select>
+    <update id="updateUser" parameterType="Long">
+        update t_userinfo
+        <set>
+            login_status= "1"
+        </set>
+        where phone_number=#{phoneNumber}
+    </update>
+
+  <update id="updateUserByPhone">
+    update t_userinfo
+    <set>
+      license =#{license} ,
+      medical_card = #{medicalCard}
+    </set>
+    where phone_number=#{phoneNumber}
+  </update>
+</mapper>
